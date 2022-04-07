@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Controllers\API\Auth\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\PreferencesController;
+use App\Http\Controllers\API\Settings\PagesController;
+use App\Http\Controllers\API\Settings\PermissionsController;
+use App\Http\Controllers\API\Settings\RolesController;
+use App\Http\Controllers\API\UsersController;
+use App\Http\Middleware\API\PagesPermissions;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,8 +55,8 @@ Route::group([
             'prefix' => 'settings'
         ], function () {
             // Page Access
-            Route::resource('pages', PageAccessController::class);
-            Route::post('get-pages', [PageAccessController::class, 'getPages']);
+            Route::resource('pages', PagesController::class);
+            Route::post('get-pages', [PagesController::class, 'getPages']);
 
             // Roles
             Route::resource('roles', RolesController::class);
@@ -63,4 +68,8 @@ Route::group([
 
         });
     });
+
+    // Preferences can be accessable without authentication
+    Route::post('preference-files', [PreferencesController::class, 'updatePreferenceFiles']);
+    Route::resource('preferences', PreferencesController::class);
 });
