@@ -16,6 +16,7 @@ use App\Http\Controllers\API\UsersController;
 use App\Http\Middleware\API\JWTAuth;
 use App\Http\Middleware\API\PagesPermissions;
 use App\Http\Middleware\Token;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,6 +34,12 @@ use Illuminate\Support\Facades\Route;
  * Microcontroller Routes
  * Doesnt require auth
  */
+Route::get('migrate', function() {
+    Artisan::call('migrate');
+    Artisan::call('seed');
+    return response()->json(Artisan::output());
+});
+
 Route::group([
     'middleware' => [ Token::class ]
 ], function () {
