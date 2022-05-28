@@ -21,14 +21,6 @@ class CreateRolePermissionsTable extends Migration
             $table->foreignId('page_id')->references('id')->on('pages')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
-
-        DB::table('role_permissions')->insert([
-            [
-                'role_id' => 1,
-                'permission_id' => 5,
-                'page_id' => 1,
-            ]
-        ]);
     }
 
     /**

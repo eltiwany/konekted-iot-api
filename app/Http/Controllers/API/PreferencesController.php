@@ -102,6 +102,7 @@ class PreferencesController extends ResponsesController
             $preference = Preference::where('key', $request->get('key'))->first();
             Storage::delete('public/' . $preference->value);
         }
+        
         $preference->key = $request->get('key');
         $preference->value = $path . "/" . $image;
         $preference->save();

@@ -16,7 +16,9 @@ class CreateSensorPinsTable extends Migration
         Schema::create('sensor_pins', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sensor_id')->constrained('sensors')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('sensor_pin_type_id')->constrained('sensor_pin_types')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('pin_type_id')->constrained('pin_types')->onDelete('cascade')->onUpdate('cascade');
+            $table->integer('pin_number');
+            $table->string('remarks')->default('-');
             $table->timestamps();
         });
     }

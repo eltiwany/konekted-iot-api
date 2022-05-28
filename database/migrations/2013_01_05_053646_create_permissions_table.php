@@ -20,34 +20,6 @@ class CreatePermissionsTable extends Migration
             $table->string('description');
             $table->timestamps();
         });
-
-        DB::table('permissions')->insert([
-            [
-                'id' => 1,
-                'name' => 'r',
-                'description' => 'read'
-            ],
-            [
-                'id' => 2,
-                'name' => 'v',
-                'description' => 'view'
-            ],
-            [
-                'id' => 3,
-                'name' => 'w',
-                'description' => 'write'
-            ],
-            [
-                'id' => 4,
-                'name' => 'd',
-                'description' => 'delete'
-            ],
-            [
-                'id' => 5,
-                'name' => 'a',
-                'description' => 'all'
-            ],
-        ]);
     }
 
     /**

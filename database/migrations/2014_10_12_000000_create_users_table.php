@@ -26,25 +26,6 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-
-        DB::table('users')->insert([
-            [
-                'id' => 1,
-                'name' => 'Konekted Admin',
-                'role_id' => 1,
-                'email' => 'admin@konekted.com',
-                'password' => bcrypt('admin12345'),
-                'is_active' => 1
-            ],
-            [
-                'id' => 2,
-                'name' => 'Ali Abdulla Saleh',
-                'role_id' => 1,
-                'email' => 'admin@nafuutronics.com',
-                'password' => bcrypt('admin12345'),
-                'is_active' => 1
-            ],
-        ]);
     }
 
     /**

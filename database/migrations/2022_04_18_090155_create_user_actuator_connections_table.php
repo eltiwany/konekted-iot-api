@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserActuatorValuesTable extends Migration
+class CreateUserActuatorConnectionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateUserActuatorValuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_actuator_values', function (Blueprint $table) {
+        Schema::create('user_actuator_connections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_actuator_id')->constrained('user_actuators')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('actuator_column_id')->constrained('actuator_columns')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('value');
+            $table->foreignId('actuator_pin_id')->constrained('actuator_pins')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('board_pin_id')->constrained('board_pins')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateUserActuatorValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_actuator_values');
+        Schema::dropIfExists('user_actuator_connections');
     }
 }

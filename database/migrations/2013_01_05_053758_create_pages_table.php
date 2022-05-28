@@ -19,29 +19,6 @@ class CreatePagesTable extends Migration
             $table->string('name')->unique();
             $table->timestamps();
         });
-
-        DB::table('pages')->insert([
-            [
-                'id' => 1,
-                'name' => 'All'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Users'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Roles'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Permissions'
-            ],
-            [
-                'id' => 5,
-                'name' => 'Pages'
-            ],
-        ]);
     }
 
     /**

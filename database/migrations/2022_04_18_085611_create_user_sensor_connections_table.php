@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserSensorValuesTable extends Migration
+class CreateUserSensorConnectionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateUserSensorValuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_sensor_values', function (Blueprint $table) {
+        Schema::create('user_sensor_connections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_sensor_id')->constrained('user_sensors')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('sensor_column_id')->constrained('sensor_columns')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('value');
+            $table->foreignId('sensor_pin_id')->constrained('sensor_pins')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('board_pin_id')->constrained('board_pins')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateUserSensorValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_sensor_values');
+        Schema::dropIfExists('user_sensor_connections');
     }
 }

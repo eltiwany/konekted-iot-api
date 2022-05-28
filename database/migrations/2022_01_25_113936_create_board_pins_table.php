@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActuatorPinsTable extends Migration
+class CreateBoardPinsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +14,10 @@ class CreateActuatorPinsTable extends Migration
      */
     public function up()
     {
-        Schema::create('actuator_pins', function (Blueprint $table) {
+        Schema::create('board_pins', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('actuator_id')->constrained('actuators')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('pin_type_id')->constrained('pin_types')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('board_id')->constrained('boards')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('pin_type_id')->constrained('pin_types')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('pin_number');
             $table->string('remarks')->default('-');
             $table->timestamps();
@@ -30,6 +31,6 @@ class CreateActuatorPinsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('actuator_pins');
+        Schema::dropIfExists('board_pins');
     }
 }

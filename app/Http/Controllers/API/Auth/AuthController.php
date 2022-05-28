@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\ResponsesController;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -120,6 +121,40 @@ class AuthController extends ResponsesController
 
         return $this->sendResponse([], "Password has been changed!");
     }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|unique:users,email',
+            'password' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return $this->sendError('Validation fails', $validator->errors(), 401);
+
+        $role = Role::where('is_default', 1);
+        if (!$role->exists())
+            return $this->sendError('Role for users is not defined!', [], 401);
+
+        $user = new User;
+        $user->name = $request->get('name');
+        $user->email = $request->get('email');
+        $user->role_id = $role->first()->id;
+        $user->password = bcrypt($request->get('password'));
+        $user->is_active = 1;
+        $user->save();
+
+        return $this->sendResponse([], 'Registration successfully, please login!');
+    }
+
 
     public function activateAccount(Request $request)
     {

@@ -17,7 +17,9 @@ class CreateUserActuatorsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('actuator_id')->constrained('actuators')->onDelete('cascade')->onUpdate('cascade');
-            $table->boolean('is_switched_on')->default(true);
+            $table->foreignId('user_board_id')->constrained('user_boards')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('operating_value')->default(0);
+            $table->boolean('is_switched_on')->default(false);
             $table->timestamps();
         });
     }

@@ -40,7 +40,7 @@ class UsersController extends ResponsesController
         $totalRecordswithFilter = $this->fetchAllUsers()
             ->where(function ($query) use ($searchValue) {
                 $query->where('u.email', 'like', '%' . $searchValue . '%')
-                    ->orWhere('e.id', 'like', '%' . $searchValue . '%')
+                    ->orWhere('u.name', 'like', '%' . $searchValue . '%')
                     ->orWhere('r.name', 'like', '%' . $searchValue . '%')
                     ->orWhere('u.id', 'like', '%' . $searchValue . '%');
             })
@@ -52,7 +52,6 @@ class UsersController extends ResponsesController
             ->orderBy($dt->columnName, $dt->columnSortOrder)
             ->where(function ($query) use ($searchValue) {
                 $query->where('u.email', 'like', '%' . $searchValue . '%')
-                    ->orWhere('e.id', 'like', '%' . $searchValue . '%')
                     ->orWhere('u.name', 'like', '%' . $searchValue . '%')
                     ->orWhere('r.name', 'like', '%' . $searchValue . '%')
                     ->orWhere('u.id', 'like', '%' . $searchValue . '%');
@@ -124,6 +123,7 @@ class UsersController extends ResponsesController
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required',
+            'name' => 'required',
             'roleId' => 'required',
             'password' => 'required'
         ]);
@@ -132,6 +132,7 @@ class UsersController extends ResponsesController
             return $this->sendError('Validation fails', $validator->errors(), 401);
 
         $user = new User;
+        $user->name = $request->get('name');
         $user->email = $request->get('email');
         $user->role_id = $request->get('roleId');
         $user->password = bcrypt($request->get('password'));
@@ -152,6 +153,7 @@ class UsersController extends ResponsesController
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
+            'name' => 'required',
             'email' => 'required',
             'roleId' => 'required',
         ]);
@@ -160,6 +162,7 @@ class UsersController extends ResponsesController
             return $this->sendError('Validation fails', $validator->errors(), 401);
 
         $user = User::find($id);
+        $user->name = $request->get('name');
         $user->email = $request->get('email');
         $user->role_id = $request->get('roleId');
         $user->save();

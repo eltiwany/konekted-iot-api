@@ -17,6 +17,7 @@ class CreateUserSensorsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('sensor_id')->constrained('sensors')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_board_id')->constrained('user_boards')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('interval')->default(15000);
             $table->timestamps();
         });

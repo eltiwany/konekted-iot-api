@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSensorPinTypesTable extends Migration
+class CreateBoardsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +14,11 @@ class CreateSensorPinTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sensor_pin_types', function (Blueprint $table) {
+        Schema::create('boards', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->unique();
+            $table->string('name')->unique();
+            $table->longText('description')->nullable();
+            $table->longText('image_url')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ class CreateSensorPinTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sensor_pin_types');
+        Schema::dropIfExists('boards');
     }
 }
