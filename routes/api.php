@@ -40,6 +40,11 @@ Route::get('migrate', function() {
     return response()->json(Artisan::output());
 });
 
+Route::get('link', function() {
+    Artisan::call('storage:link');
+    return response()->json(Artisan::output());
+});
+
 Route::group([
     'middleware' => [ Token::class ]
 ], function () {
