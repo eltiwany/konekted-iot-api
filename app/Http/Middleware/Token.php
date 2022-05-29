@@ -19,7 +19,7 @@ class Token extends ResponsesController
     public function handle(Request $request, Closure $next)
     {
         if (!$request->get('token'))
-            return $this->sendError('Token is not provided!', $request->all(), 401);
+            return $this->sendResponse($request->all(), 'Token is not provided!');
 
         $userActiveBoard = UserBoard::where('token', $request->get('token'))->first();
         if (!$userActiveBoard)
