@@ -40,6 +40,12 @@ class BoardsSeeder extends Seeder
             [
                 'board_id'      =>    1,
                 'pin_type_id'   =>    4,    // GPIO
+                'pin_number'    =>    0,
+                'remarks'       =>    ''
+            ],
+            [
+                'board_id'      =>    1,
+                'pin_type_id'   =>    4,    // GPIO
                 'pin_number'    =>    1,
                 'remarks'       =>    'TX'
             ],
@@ -70,24 +76,6 @@ class BoardsSeeder extends Seeder
             [
                 'board_id'      =>    1,
                 'pin_type_id'   =>    4,
-                'pin_number'    =>    6,
-                'remarks'       =>    ''
-            ],
-            [
-                'board_id'      =>    1,
-                'pin_type_id'   =>    4,
-                'pin_number'    =>    7,
-                'remarks'       =>    ''
-            ],
-            [
-                'board_id'      =>    1,
-                'pin_type_id'   =>    4,
-                'pin_number'    =>    8,
-                'remarks'       =>    ''
-            ],
-            [
-                'board_id'      =>    1,
-                'pin_type_id'   =>    4,
                 'pin_number'    =>    9,
                 'remarks'       =>    ''
             ],
@@ -95,12 +83,6 @@ class BoardsSeeder extends Seeder
                 'board_id'      =>    1,
                 'pin_type_id'   =>    4,
                 'pin_number'    =>    10,
-                'remarks'       =>    ''
-            ],
-            [
-                'board_id'      =>    1,
-                'pin_type_id'   =>    4,
-                'pin_number'    =>    11,
                 'remarks'       =>    ''
             ],
             [
