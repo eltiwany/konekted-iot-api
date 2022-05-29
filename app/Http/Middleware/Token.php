@@ -19,7 +19,7 @@ class Token extends ResponsesController
     public function handle(Request $request, Closure $next)
     {
         // Debug purposes
-        return $this->sendResponse($request->all(), "What is returned...");
+        // return $this->sendResponse($request->all(), "What is returned...");
 
         if (!$request->get('token'))
             return $this->sendError('Token is not provided!', [], 401);
