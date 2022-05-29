@@ -50,7 +50,7 @@ Route::group([
 ], function () {
     Route::get('get-board-omc', [UserBoardsController::class, 'getBoardOMC']);
     Route::get('get-connections-omc', [UserBoardsController::class, 'getConnectionsOMC']);
-    Route::post('set-board-omc', [UserBoardsController::class, 'setBoardOMC']);
+    Route::get('set-board-omc', [UserBoardsController::class, 'setBoardOMC']);
     Route::get('get-actuator-status-omc/{userActuatorId}', [UserBoardsController::class, 'getActuatorStatus']);
 });
 
