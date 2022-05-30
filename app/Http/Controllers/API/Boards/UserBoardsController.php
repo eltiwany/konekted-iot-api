@@ -51,6 +51,16 @@ class UserBoardsController extends ResponsesController
         return $this->sendResponse($connections, '');
     }
 
+    public function getActuatorsOMC(Request $request)
+    {
+        $token = $request->get('token');
+
+        $userBoard = $this->fetchAllUserBoards($token)->first();
+        $connections = $this->fetchConnections($userBoard->id, "actuators");
+        $this->saveToLog('OMC', 'Fetching devices connections', $token);
+        return $this->sendResponse($connections, '');
+    }
+
     public function getActuatorStatus(Request $request, $userActuatorId)
     {
         // Getting actuators connected with this board
@@ -84,95 +94,105 @@ class UserBoardsController extends ResponsesController
         return $this->sendResponse([], 'Board is ' . ($request->get('status') == 1 ? 'online' : 'offline') . '!');
     }
 
-    public function fetchConnections($userBoardId)
+    public function fetchConnections($userBoardId, $filter = "all")
     {
         $connections = [];
 
-        // Getting sensors connected with this board
-        $userSensors = DB::table('user_sensor_connections as usc')
-                    ->join('user_sensors as us', 'usc.user_sensor_id', '=', 'us.id')
-                    ->join('user_boards as ub', 'us.user_board_id', '=', 'ub.id')
-                    ->join('boards as b', 'ub.board_id', '=', 'b.id')
-                    ->join('sensors as s', 's.id', '=', 'us.sensor_id')
-                    ->selectRaw('us.id, s.name, us.interval')
-                    ->where('ub.id', $userBoardId)
-                    ->groupBy('us.id')
-                    ->get();
+        if ($filter == "all" || $filter == "sensors") {
+            // Getting sensors connected with this board
+            $userSensors = DB::table('user_sensor_connections as usc')
+                        ->join('user_sensors as us', 'usc.user_sensor_id', '=', 'us.id')
+                        ->join('user_boards as ub', 'us.user_board_id', '=', 'ub.id')
+                        ->join('boards as b', 'ub.board_id', '=', 'b.id')
+                        ->join('sensors as s', 's.id', '=', 'us.sensor_id')
+                        ->selectRaw('us.id, s.name, us.interval')
+                        ->where('ub.id', $userBoardId)
+                        ->groupBy('us.id')
+                        ->get();
 
-            // For each sensor return simple connections and expected data
-            $sensorsTemp = [];
-            foreach ($userSensors as $userSensor) {
-                // Sensor connections
-                $userSensorConnections = DB::table('user_sensor_connections as usc')
-                                        ->join('sensor_pins as sp', 'usc.sensor_pin_id', '=', 'sp.id')
-                                        ->join('pin_types as spt', 'sp.pin_type_id', '=', 'spt.id')
-                                        ->join('board_pins as bp', 'usc.board_pin_id', '=', 'bp.id')
-                                        ->join('pin_types as bpt', 'bp.pin_type_id', '=', 'bpt.id')
-                                        ->selectRaw('
-                                                        spt.type as sensor_pin_type,
-                                                        bpt.type as board_pin_type,
-                                                        bp.pin_number as board_pin_number
-                                                    ')
-                                        ->where('usc.user_sensor_id', $userSensor->id)
-                                        ->get();
-                // Sensor expected data
-                $userSensorColumns = DB::table('sensor_columns as sc')
-                                        ->join('user_sensors as us', 'us.sensor_id', '=', 'sc.sensor_id')
-                                        ->selectRaw('
-                                                        sc.column
-                                                    ')
-                                        ->where('us.id', $userSensor->id)
-                                        ->get();
-                array_push($sensorsTemp,
-                    [
-                        'sensor'        => $userSensor,
-                        'columns'       => $userSensorColumns,
-                        'connections'   => $userSensorConnections,
-                    ]
-                );
-            }
+                // For each sensor return simple connections and expected data
+                $sensorsTemp = [];
+                foreach ($userSensors as $userSensor) {
+                    // Sensor connections
+                    $userSensorConnections = DB::table('user_sensor_connections as usc')
+                                            ->join('sensor_pins as sp', 'usc.sensor_pin_id', '=', 'sp.id')
+                                            ->join('pin_types as spt', 'sp.pin_type_id', '=', 'spt.id')
+                                            ->join('board_pins as bp', 'usc.board_pin_id', '=', 'bp.id')
+                                            ->join('pin_types as bpt', 'bp.pin_type_id', '=', 'bpt.id')
+                                            ->selectRaw('
+                                                            spt.type as sensor_pin_type,
+                                                            bpt.type as board_pin_type,
+                                                            bp.pin_number as board_pin_number
+                                                        ')
+                                            ->where('usc.user_sensor_id', $userSensor->id)
+                                            ->get();
+                    // Sensor expected data
+                    $userSensorColumns = DB::table('sensor_columns as sc')
+                                            ->join('user_sensors as us', 'us.sensor_id', '=', 'sc.sensor_id')
+                                            ->selectRaw('
+                                                            sc.column
+                                                        ')
+                                            ->where('us.id', $userSensor->id)
+                                            ->get();
+                    array_push($sensorsTemp,
+                        [
+                            'sensor'        => $userSensor,
+                            'columns'       => $userSensorColumns,
+                            'connections'   => $userSensorConnections,
+                        ]
+                    );
+                }
 
-        // Getting actuators connected with this board
-        $userActuators = DB::table('user_actuator_connections as usc')
-                    ->join('user_actuators as us', 'usc.user_actuator_id', '=', 'us.id')
-                    ->join('user_boards as ub', 'us.user_board_id', '=', 'ub.id')
-                    ->join('boards as b', 'ub.board_id', '=', 'b.id')
-                    ->join('actuators as s', 's.id', '=', 'us.actuator_id')
-                    ->selectRaw('us.id, s.name, us.operating_value, us.is_switched_on')
-                    ->where('ub.id', $userBoardId)
-                    ->groupBy('us.id')
-                    ->get();
+            array_push(
+                $connections, [
+                    "sensors" => $sensorsTemp,
+                ]
+            );
+        }
 
-            // For each actuator return simple connections
-            $actuatorsTemp = [];
-            foreach ($userActuators as $userActuator) {
-                // Actuator connections
-                $userActuatorConnections = DB::table('user_actuator_connections as usc')
-                                        ->join('actuator_pins as sp', 'usc.actuator_pin_id', '=', 'sp.id')
-                                        ->join('pin_types as spt', 'sp.pin_type_id', '=', 'spt.id')
-                                        ->join('board_pins as bp', 'usc.board_pin_id', '=', 'bp.id')
-                                        ->join('pin_types as bpt', 'bp.pin_type_id', '=', 'bpt.id')
-                                        ->selectRaw('
-                                                        spt.type as actuator_pin_type,
-                                                        bpt.type as board_pin_type,
-                                                        bp.pin_number as board_pin_number
-                                                    ')
-                                        ->where('usc.user_actuator_id', $userActuator->id)
-                                        ->get();
+        if ($filter == "all" || $filter == "actuators") {
+            // Getting actuators connected with this board
+            $userActuators = DB::table('user_actuator_connections as usc')
+                        ->join('user_actuators as us', 'usc.user_actuator_id', '=', 'us.id')
+                        ->join('user_boards as ub', 'us.user_board_id', '=', 'ub.id')
+                        ->join('boards as b', 'ub.board_id', '=', 'b.id')
+                        ->join('actuators as s', 's.id', '=', 'us.actuator_id')
+                        ->selectRaw('us.id, s.name, us.operating_value, us.is_switched_on')
+                        ->where('ub.id', $userBoardId)
+                        ->groupBy('us.id')
+                        ->get();
 
-                array_push($actuatorsTemp,
-                    [
-                        'actuator'      => $userActuator,
-                        'connections'   => $userActuatorConnections,
-                    ]
-                );
-            }
+                // For each actuator return simple connections
+                $actuatorsTemp = [];
+                foreach ($userActuators as $userActuator) {
+                    // Actuator connections
+                    $userActuatorConnections = DB::table('user_actuator_connections as usc')
+                                            ->join('actuator_pins as sp', 'usc.actuator_pin_id', '=', 'sp.id')
+                                            ->join('pin_types as spt', 'sp.pin_type_id', '=', 'spt.id')
+                                            ->join('board_pins as bp', 'usc.board_pin_id', '=', 'bp.id')
+                                            ->join('pin_types as bpt', 'bp.pin_type_id', '=', 'bpt.id')
+                                            ->selectRaw('
+                                                            spt.type as actuator_pin_type,
+                                                            bpt.type as board_pin_type,
+                                                            bp.pin_number as board_pin_number
+                                                        ')
+                                            ->where('usc.user_actuator_id', $userActuator->id)
+                                            ->get();
 
-        // merging sensor and actuator connections
-        $connections = [
-            "sensors" => $sensorsTemp,
-            "actuators" => $actuatorsTemp
-        ];
+                    array_push($actuatorsTemp,
+                        [
+                            'actuator'      => $userActuator,
+                            'connections'   => $userActuatorConnections,
+                        ]
+                    );
+                }
+
+            array_push(
+                $connections, [
+                    "actuators" => $actuatorsTemp
+                ]
+            );
+        }
 
         return $connections;
     }
