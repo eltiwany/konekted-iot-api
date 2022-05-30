@@ -93,6 +93,7 @@ class UserSensorsController extends ResponsesController
                             ub.id,
                             b.id as sensor_id,
                             b.name,
+                            ub.name as sensor_name,
                             b.description,
                             b.image_url,
                             ub.interval
@@ -196,6 +197,7 @@ class UserSensorsController extends ResponsesController
             return $this->sendError('Validation fails', $validator->errors(), 401);
 
         $sensorId = $request->get('sensorId');
+        $name = $request->get('name');
         $userBoardId = $request->get('userBoardId');
         $interval = $request->get('interval');
         $connections = $request->get('connections');
@@ -204,6 +206,7 @@ class UserSensorsController extends ResponsesController
         $userSensor = new UserSensor;
         $userSensor->user_id = auth()->user()->id;
         $userSensor->sensor_id = $sensorId;
+        $userSensor->name = $name;
         $userSensor->user_board_id = $userBoardId;
         $userSensor->interval = $interval;
         $userSensor->save();

@@ -116,6 +116,7 @@ class UserActuatorsController extends ResponsesController
                             ub.id,
                             b.id as actuator_id,
                             b.name,
+                            ub.name as actuator_name,
                             b.description,
                             b.image_url,
                             ub.is_switched_on,
@@ -219,12 +220,14 @@ class UserActuatorsController extends ResponsesController
             return $this->sendError('Validation fails', $validator->errors(), 401);
 
         $actuatorId = $request->get('actuatorId');
+        $name = $request->get('name');
         $userBoardId = $request->get('userBoardId');
         $connections = $request->get('connections');
 
         // Save userActuator
         $userActuator = new UserActuator;
         $userActuator->user_id = auth()->user()->id;
+        $userActuator->name = $name;
         $userActuator->actuator_id = $actuatorId;
         $userActuator->user_board_id = $userBoardId;
         $userActuator->save();

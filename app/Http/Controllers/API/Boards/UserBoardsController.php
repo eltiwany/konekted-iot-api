@@ -56,7 +56,7 @@ class UserBoardsController extends ResponsesController
         $token = $request->get('token');
 
         $userBoard = $this->fetchAllUserBoards($token)->first();
-        $connections = $this->fetchConnections($userBoard->id, "actuators");
+        $connections = $this->fetchConnections($userBoard->id, "actuators", false);
         $this->saveToLog('OMC', 'Fetching devices connections', $token);
         return $this->sendResponse($connections, '');
     }
@@ -94,7 +94,7 @@ class UserBoardsController extends ResponsesController
         return $this->sendResponse([], 'Board is ' . ($request->get('status') == 1 ? 'online' : 'offline') . '!');
     }
 
-    public function fetchConnections($userBoardId, $filter = "all")
+    public function fetchConnections($userBoardId, $filter = "all", $allData = true)
     {
         $connections = [];
 
@@ -114,7 +114,7 @@ class UserBoardsController extends ResponsesController
                 $sensorsTemp = [];
                 foreach ($userSensors as $userSensor) {
                     // Sensor connections
-                    $userSensorConnections = DB::table('user_sensor_connections as usc')
+                    $userSensorConnections = $allData ? DB::table('user_sensor_connections as usc')
                                             ->join('sensor_pins as sp', 'usc.sensor_pin_id', '=', 'sp.id')
                                             ->join('pin_types as spt', 'sp.pin_type_id', '=', 'spt.id')
                                             ->join('board_pins as bp', 'usc.board_pin_id', '=', 'bp.id')
@@ -125,15 +125,15 @@ class UserBoardsController extends ResponsesController
                                                             bp.pin_number as board_pin_number
                                                         ')
                                             ->where('usc.user_sensor_id', $userSensor->id)
-                                            ->get();
+                                            ->get() : [];
                     // Sensor expected data
-                    $userSensorColumns = DB::table('sensor_columns as sc')
+                    $userSensorColumns = $allData ? DB::table('sensor_columns as sc')
                                             ->join('user_sensors as us', 'us.sensor_id', '=', 'sc.sensor_id')
                                             ->selectRaw('
                                                             sc.column
                                                         ')
                                             ->where('us.id', $userSensor->id)
-                                            ->get();
+                                            ->get() : [];
                     array_push($sensorsTemp,
                         [
                             'sensor'        => $userSensor,
@@ -160,7 +160,7 @@ class UserBoardsController extends ResponsesController
                 $actuatorsTemp = [];
                 foreach ($userActuators as $userActuator) {
                     // Actuator connections
-                    $userActuatorConnections = DB::table('user_actuator_connections as usc')
+                    $userActuatorConnections = $allData ? DB::table('user_actuator_connections as usc')
                                             ->join('actuator_pins as sp', 'usc.actuator_pin_id', '=', 'sp.id')
                                             ->join('pin_types as spt', 'sp.pin_type_id', '=', 'spt.id')
                                             ->join('board_pins as bp', 'usc.board_pin_id', '=', 'bp.id')
@@ -171,7 +171,7 @@ class UserBoardsController extends ResponsesController
                                                             bp.pin_number as board_pin_number
                                                         ')
                                             ->where('usc.user_actuator_id', $userActuator->id)
-                                            ->get();
+                                            ->get() : [];
 
                     array_push($actuatorsTemp,
                         [
