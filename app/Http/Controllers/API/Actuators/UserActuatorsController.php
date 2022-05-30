@@ -116,7 +116,7 @@ class UserActuatorsController extends ResponsesController
                             ub.id,
                             b.id as actuator_id,
                             b.name,
-                            ub.name as actuator_name,
+                            ub.name as user_defined_name,
                             b.description,
                             b.image_url,
                             ub.is_switched_on,

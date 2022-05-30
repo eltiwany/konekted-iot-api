@@ -93,7 +93,7 @@ class UserSensorsController extends ResponsesController
                             ub.id,
                             b.id as sensor_id,
                             b.name,
-                            ub.name as sensor_name,
+                            ub.name as user_defined_name,
                             b.description,
                             b.image_url,
                             ub.interval
