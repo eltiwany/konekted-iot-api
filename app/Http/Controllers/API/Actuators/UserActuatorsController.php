@@ -26,6 +26,29 @@ class UserActuatorsController extends ResponsesController
         return $this->sendResponse($userActuatorsWithPins, '');
     }
 
+    public function switchActuator(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'userActuatorId' => 'required',
+            'isSwitchedOn' => 'required',
+        ]);
+
+        if ($validator->fails())
+            return $this->sendError('Validation fails', $validator->errors(), 401);
+
+        $userActuatorId = $request->get('userActuatorId');
+        $isSwitchedOn = $request->get('isSwitchedOn');
+
+        // Save userActuator
+        $userActuator = UserActuator::find($userActuatorId);
+        $name = $userActuator->actuator->name;
+        $userActuator->is_switched_on = $isSwitchedOn;
+        $userActuator->save();
+
+        $this->saveToLog('Control Actuators', 'Actuator: ' . $name . ' has been turned ' . ($isSwitchedOn ? 'on' : 'off'));
+        return $this->sendResponse([], 'Actuator: ' . $name . ' has been turned ' . ($isSwitchedOn ? 'on' : 'off'));
+    }
+
     public function getUserActuatorPinTypes()
     {
         return $this->sendResponse($this->fetchUserActuatorPinTypes(), '');
@@ -94,7 +117,9 @@ class UserActuatorsController extends ResponsesController
                             b.id as actuator_id,
                             b.name,
                             b.description,
-                            b.image_url
+                            b.image_url,
+                            ub.is_switched_on,
+                            ub.operating_value
             ')
             ->whereRaw('ub.user_id = ?', [ auth()->user()->id ])
             ->groupBy('ub.id');

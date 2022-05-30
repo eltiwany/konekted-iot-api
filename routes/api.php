@@ -107,6 +107,7 @@ Route::group([
         Route::post('get-actuator-pin-types', [ActuatorsController::class, 'getActuatorPinTypes']);
         Route::resource('actuators', ActuatorsController::class);
         // -------------------------- - - - - - ----------------------------- //
+        Route::post('switch-actuator', [UserActuatorsController::class, 'switchActuator']);
         Route::resource('user-actuators', UserActuatorsController::class);
 
         // Pins
