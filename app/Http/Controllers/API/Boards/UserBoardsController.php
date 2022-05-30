@@ -56,7 +56,7 @@ class UserBoardsController extends ResponsesController
         $token = $request->get('token');
 
         $userBoard = $this->fetchAllUserBoards($token)->first();
-        $connections = $this->fetchConnections($userBoard->id, "actuators", false);
+        $connections = $this->fetchConnections($userBoard->id, "actuators");
         $this->saveToLog('OMC', 'Fetching devices connections', $token);
         return $this->sendResponse($connections, '');
     }
