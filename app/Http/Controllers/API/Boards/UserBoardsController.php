@@ -105,7 +105,7 @@ class UserBoardsController extends ResponsesController
                         ->join('user_boards as ub', 'us.user_board_id', '=', 'ub.id')
                         ->join('boards as b', 'ub.board_id', '=', 'b.id')
                         ->join('sensors as s', 's.id', '=', 'us.sensor_id')
-                        ->selectRaw('us.id, s.name, us.interval')
+                        ->selectRaw('us.id, concat(s.name, " -> ", us.name) as name, us.interval')
                         ->where('ub.id', $userBoardId)
                         ->groupBy('us.id')
                         ->get();
@@ -151,7 +151,7 @@ class UserBoardsController extends ResponsesController
                         ->join('user_boards as ub', 'us.user_board_id', '=', 'ub.id')
                         ->join('boards as b', 'ub.board_id', '=', 'b.id')
                         ->join('actuators as s', 's.id', '=', 'us.actuator_id')
-                        ->selectRaw('us.id, s.name, us.operating_value, us.is_switched_on')
+                        ->selectRaw('us.id, concat(s.name, " -> ", us.name) as name, us.operating_value, us.is_switched_on')
                         ->where('ub.id', $userBoardId)
                         ->groupBy('us.id')
                         ->get();
