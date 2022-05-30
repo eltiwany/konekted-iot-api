@@ -142,12 +142,6 @@ class UserBoardsController extends ResponsesController
                         ]
                     );
                 }
-
-            array_push(
-                $connections, [
-                    "sensors" => $sensorsTemp,
-                ]
-            );
         }
 
         if ($filter == "all" || $filter == "actuators") {
@@ -186,13 +180,12 @@ class UserBoardsController extends ResponsesController
                         ]
                     );
                 }
-
-            array_push(
-                $connections, [
-                    "actuators" => $actuatorsTemp
-                ]
-            );
         }
+
+        $connections = [
+            "sensors" => ($filter == "all" || $filter == "sensors") ? $sensorsTemp : [],
+            "actuators" => ($filter == "all" || $filter == "actuators") ? $actuatorsTemp : []
+        ];
 
         return $connections;
     }
