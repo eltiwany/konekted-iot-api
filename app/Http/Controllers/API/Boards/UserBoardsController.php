@@ -61,6 +61,16 @@ class UserBoardsController extends ResponsesController
         return $this->sendResponse($connections, '');
     }
 
+    public function getSensorsOMC(Request $request)
+    {
+        $token = $request->get('token');
+
+        $userBoard = $this->fetchAllUserBoards($token)->first();
+        $connections = $this->fetchConnections($userBoard->id, "sensors");
+        $this->saveToLog('OMC', 'Fetching devices connections', $token);
+        return $this->sendResponse($connections, '');
+    }
+
     public function getActuatorStatus(Request $request, $userActuatorId)
     {
         // Getting actuators connected with this board

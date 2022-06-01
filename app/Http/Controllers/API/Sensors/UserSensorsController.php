@@ -7,6 +7,7 @@ use App\Models\SensorColumn;
 use App\Models\SensorPin;
 use App\Models\UserSensor;
 use App\Models\UserSensorConnection;
+use App\Models\UserSensorValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -29,6 +30,23 @@ class UserSensorsController extends ResponsesController
     public function getUserSensorPinTypes()
     {
         return $this->sendResponse($this->fetchUserSensorPinTypes(), '');
+    }
+
+    public function setSensorData(Request $request)
+    {
+        $userSensorId = $request->get('user_sensor_id');
+        $column = $request->get('column');
+        $sensorId = UserSensor::find($userSensorId)->sensor_id;
+        $columnId = SensorColumn::where('sensor_id', $sensorId)->first()->id;
+        $value = $request->get('value');
+
+        $userData = new UserSensorValue;
+        $userData->sensor_column_id = $columnId;
+        $userData->user_sensor_id = $userSensorId;
+        $userData->value = $value;
+        $userData->save();
+
+        return $this->sendResponse([], "Data saved");
     }
 
     /**

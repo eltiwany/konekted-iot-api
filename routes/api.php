@@ -51,7 +51,9 @@ Route::group([
     Route::get('get-board-omc', [UserBoardsController::class, 'getBoardOMC']);
     Route::get('get-connections-omc', [UserBoardsController::class, 'getConnectionsOMC']);
     Route::get('get-actuators-omc', [UserBoardsController::class, 'getActuatorsOMC']);
+    Route::get('get-sensors-omc', [UserBoardsController::class, 'getSensorsOMC']);
     Route::get('set-board-omc', [UserBoardsController::class, 'setBoardOMC']);
+    Route::get('set-sensor-data-omc', [UserSensorsController::class, 'setSensorData']);
     Route::get('get-actuator-status-omc/{userActuatorId}', [UserBoardsController::class, 'getActuatorStatus']);
 });
 
