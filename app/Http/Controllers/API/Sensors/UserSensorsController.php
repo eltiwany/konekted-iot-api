@@ -44,7 +44,9 @@ class UserSensorsController extends ResponsesController
         $userData->sensor_column_id = $columnId;
         $userData->user_sensor_id = $userSensorId;
         $userData->value = $value;
-        $userData->save();
+        if (!$userData->save()) {
+            return $this->sendError([], "", 401);
+        }
 
         return $this->sendResponse([], "Data saved");
     }
