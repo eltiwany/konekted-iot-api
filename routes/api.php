@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Actuators\ActuatorsController;
 use App\Http\Controllers\API\Actuators\UserActuatorsController;
 use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\API\AutomationsController;
 use App\Http\Controllers\API\Boards\BoardsController;
 use App\Http\Controllers\API\Boards\UserBoardsController;
 use App\Http\Controllers\API\PinTypesController;
@@ -103,7 +104,7 @@ Route::group([
         Route::resource('sensors', SensorsController::class);
         // -------------------------- - - - - - ----------------------------- //
         Route::resource('user-sensors', UserSensorsController::class);
-        Route::get('get-sensor-omc', [UserSensorsController::class, 'getSensorOMC']);
+        Route::get('get-user-sensor-values', [UserSensorsController::class, 'getUserSensorValues']);
 
         // Actuators
         Route::post('get-actuators', [ActuatorsController::class, 'getActuators']);
@@ -116,6 +117,10 @@ Route::group([
         // Pins
         Route::post('get-pin-types', [PinTypesController::class, 'getPinTypes']);
         Route::resource('pin-types', PinTypesController::class);
+
+        // Automations
+        Route::post('get-automations', [AutomationsController::class, 'getAutomations']);
+        Route::resource('automations', AutomationsController::class);
 
         // Settings API's
         Route::group([

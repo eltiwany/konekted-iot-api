@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API\Sensors;
 
+use App\Http\Controllers\API\AutomationsController;
 use App\Http\Controllers\ResponsesController;
+use App\Models\Automation;
 use App\Models\SensorColumn;
 use App\Models\SensorPin;
 use App\Models\UserSensor;
@@ -32,21 +34,51 @@ class UserSensorsController extends ResponsesController
         return $this->sendResponse($this->fetchUserSensorPinTypes(), '');
     }
 
+    public function getUserSensorValues()
+    {
+        $data = [];
+        $userSensors = UserSensor::where('user_id', auth()->user()->id)->get();
+        foreach ($userSensors as $userSensor) {
+            $sensorColumnValues = [];
+            foreach($userSensor->sensor->columns as $column) {
+                array_push($sensorColumnValues, [
+                    "name" => $column->column,
+                    "data" => UserSensorValue::where(['sensor_column_id' => $column->id])->pluck('value')->toArray()
+                ]);
+            }
+            array_push($data, [
+                'sensor' => [
+                    "id" => $userSensor->id,
+                    "sensor_id" => $userSensor->sensor_id,
+                    "user_defined_name" => $userSensor->name,
+                    "name" => $userSensor->sensor->name
+                ],
+                'columns' => $sensorColumnValues
+            ]);
+            $sensorColumnValues = [];
+        }
+        return $this->sendResponse($data, []);
+    }
+
     public function setSensorData(Request $request)
     {
         $userSensorId = $request->get('user_sensor_id');
         $column = $request->get('column');
         $sensorId = UserSensor::find($userSensorId)->sensor_id;
-        $columnId = SensorColumn::where('sensor_id', $sensorId)->first()->id;
+        $columnId = SensorColumn::where(['sensor_id' => $sensorId, 'column' => $column])->first()->id;
         $value = $request->get('value');
 
         $userData = new UserSensorValue;
         $userData->sensor_column_id = $columnId;
         $userData->user_sensor_id = $userSensorId;
         $userData->value = $value;
+
         if (!$userData->save()) {
             return $this->sendError([], "", 401);
         }
+
+        // Automate everytime data was sent
+        AutomationsController::triggerAutomation($userSensorId, $columnId);
 
         return $this->sendResponse([], "Data saved");
     }

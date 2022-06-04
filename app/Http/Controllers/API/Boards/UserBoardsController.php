@@ -365,6 +365,7 @@ class UserBoardsController extends ResponsesController
         $userBoard->user_id = auth()->user()->id;
         $userBoard->board_id = $boardId;
         $userBoard->token = $token;
+        $userBoard->is_online = 0;
         $userBoard->save();
 
         $this->saveToLog('Boards', 'Linked Board with boardId: ' . $boardId);
