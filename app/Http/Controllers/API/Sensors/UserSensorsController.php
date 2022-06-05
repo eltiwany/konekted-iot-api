@@ -43,7 +43,7 @@ class UserSensorsController extends ResponsesController
             foreach($userSensor->sensor->columns as $column) {
                 array_push($sensorColumnValues, [
                     "name" => $column->column,
-                    "data" => UserSensorValue::where(['sensor_column_id' => $column->id])->limit(100)->pluck('value')->toArray()
+                    "data" => UserSensorValue::where(['sensor_column_id' => $column->id])->orderBy('created_at', 'desc')->limit(100)->pluck('value')->toArray()
                 ]);
             }
             array_push($data, [

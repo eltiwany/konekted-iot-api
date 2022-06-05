@@ -4,8 +4,10 @@ namespace App\Http\Controllers\API\Boards;
 
 use App\Http\Controllers\ResponsesController;
 use App\Models\BoardPin;
+use App\Models\UserActuator;
 use App\Models\UserBoard;
 use App\Models\UserBoardPin;
+use App\Models\UserSensor;
 use App\Models\UserSensorConnection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -92,6 +94,24 @@ class UserBoardsController extends ResponsesController
         $this->saveToLog('OMC', 'Getting actuator (' . $userActuator->name . ') status as (' . ($userActuator->is_switched_on ? 'ON' : 'OFF') . ')', $request->get('token'));
         return $this->sendResponse($userActuator, '');
 
+    }
+
+    public function getStats()
+    {
+        return $this->sendResponse([
+            [
+                'name' => 'Boards',
+                'value' => UserBoard::where('user_id', auth()->user()->id)->count()
+            ],
+            [
+                'name' => 'Sensors',
+                'value' => UserSensor::where('user_id', auth()->user()->id)->count()
+            ],
+            [
+                'name' => 'Actuators',
+                'value' => UserActuator::where('user_id', auth()->user()->id)->count()
+            ],
+        ], []);
     }
 
     public function setBoardOMC(Request $request)

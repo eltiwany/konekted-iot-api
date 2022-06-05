@@ -73,6 +73,7 @@ Route::group([
     Route::group([
         'middleware' => [JWTAuth::class, PagesPermissions::class]
     ], function () {
+        Route::get('stats', [UserBoardsController::class, 'getStats']);
         // Auth API's
         Route::post('get-auth', [AuthController::class, 'getAuth']);
 
