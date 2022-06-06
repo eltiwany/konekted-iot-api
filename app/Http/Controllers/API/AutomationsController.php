@@ -87,7 +87,8 @@ class AutomationsController extends ResponsesController
                             ua.id as actuator_id,
                             ua.name as actuator_name,
                             a.is_switched_on
-                        ');
+                        ')
+            ->where('us.user_id', auth()->user()->id);
     }
 
     /**
