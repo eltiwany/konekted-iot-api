@@ -17,6 +17,7 @@ use App\Http\Controllers\API\UsersController;
 use App\Http\Middleware\API\JWTAuth;
 use App\Http\Middleware\API\PagesPermissions;
 use App\Http\Middleware\Token;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,10 @@ Route::get('migrate', function() {
 Route::get('link', function() {
     Artisan::call('storage:link');
     return response()->json(Artisan::output());
+});
+
+Route::get('get-payment-status', function(Request $request) {
+    return response()->json($request->all());
 });
 
 Route::group([
