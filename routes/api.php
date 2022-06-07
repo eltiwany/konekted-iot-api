@@ -17,8 +17,8 @@ use App\Http\Controllers\API\UsersController;
 use App\Http\Middleware\API\JWTAuth;
 use App\Http\Middleware\API\PagesPermissions;
 use App\Http\Middleware\Token;
-use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
