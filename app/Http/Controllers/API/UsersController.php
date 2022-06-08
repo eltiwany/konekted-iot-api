@@ -153,7 +153,7 @@ class UsersController extends ResponsesController
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            // 'name' => 'required',
             'email' => 'required',
             'roleId' => 'required',
         ]);
@@ -162,7 +162,7 @@ class UsersController extends ResponsesController
             return $this->sendError('Validation fails', $validator->errors(), 401);
 
         $user = User::find($id);
-        $user->name = $request->get('name');
+        // $user->name = $request->get('name');
         $user->email = $request->get('email');
         $user->role_id = $request->get('roleId');
         $user->save();
