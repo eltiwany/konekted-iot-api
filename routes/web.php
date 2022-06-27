@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get("fetch-uptime", function() {
+    return view('fetch-uptime');
+});
