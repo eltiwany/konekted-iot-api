@@ -32,10 +32,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/**
- * Microcontroller Routes
- * Doesnt require auth
- */
+
 Route::get('migrate', function() {
     Artisan::call('migrate');
     Artisan::call('db:seed');
@@ -47,10 +44,10 @@ Route::get('link', function() {
     return response()->json(Artisan::output());
 });
 
-Route::get('get-payment-status', function(HttpRequest $request) {
-    return response()->json($request->all());
-});
-
+/**
+ * Microcontroller Routes
+ * Doesnt require auth
+ */
 Route::group([
     'middleware' => [ Token::class ]
 ], function () {
