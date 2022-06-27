@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Konekted IoT'),
 
+    'version' => env('VERSION', '1.2'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
