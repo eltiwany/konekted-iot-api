@@ -9,14 +9,14 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-
+        <link rel="stylesheet" href="{{ asset('inter.css') }}">
         <!-- Styles -->
         <style>
             html, body {
                 background: #dfefff !important;
                 background: url('{{ URL::asset('img/hover.png') }}'), radial-gradient(#a3b7ff,#c6e3ff) !important;
                 color: #636b6f;
-                font-family: 'Arial', sans-serif;
+                font-family: 'Inter', 'Arial', sans-serif;
                 font-weight: 200;
                 height: 100vh;
                 margin: 0;
@@ -94,13 +94,13 @@
             <div class="content">
                 <h1 class="m-b-md">
                     <img class="logo" src="{{ asset('images/konekted.png') }}" alt="Konekted Logo"/><br/>
-                    <label>Konekted IoT API v{{ config('app.version') }}</label>
                 </h1>
+                <h1 style="text-shadow: 2px 3px #ffffff; font-size: calc(1.4rem + 2vw); color: black; font-weight: 800">Konekted IoT API v{{ config('app.version') }}</h1>
                 <?php
                     $status = "<label class=\"text-success\"><label class='large-dot'>●</label> Running</label>";
 
                 ?>
-                <p class='btn-light'>
+                <p class='btn-light' style="line-height: 1.5em">
                     <b>Status: {!! $status !!}</b><br/>
                     <b>Uptime: <label id="uptime" class="text-success">@include('fetch-uptime')</label></b>
                 </p>

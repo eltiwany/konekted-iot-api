@@ -120,6 +120,7 @@ class UserActuatorsController extends ResponsesController
                             b.description,
                             b.image_url,
                             ub.is_switched_on,
+                            ub.is_active_low,
                             ub.operating_value
             ')
             ->whereRaw('ub.user_id = ?', [ auth()->user()->id ])
@@ -213,6 +214,7 @@ class UserActuatorsController extends ResponsesController
 
         $validator = Validator::make($request->all(), [
             'actuatorId' => 'required',
+            'isActiveLow' => 'required',
             'connections' => 'required',
         ]);
 
@@ -221,6 +223,7 @@ class UserActuatorsController extends ResponsesController
 
         $actuatorId = $request->get('actuatorId');
         $name = $request->get('name');
+        $isActiveLow = $request->get('isActiveLow');
         $userBoardId = $request->get('userBoardId');
         $connections = $request->get('connections');
 
@@ -229,6 +232,8 @@ class UserActuatorsController extends ResponsesController
         $userActuator->user_id = auth()->user()->id;
         $userActuator->name = $name;
         $userActuator->actuator_id = $actuatorId;
+        $userActuator->is_active_low = $isActiveLow;
+        $userActuator->is_switched_on = $isActiveLow;
         $userActuator->user_board_id = $userBoardId;
         $userActuator->save();
 
