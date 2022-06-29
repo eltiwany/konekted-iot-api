@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Auth;
 use App\Http\Controllers\ResponsesController;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserBoard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -96,8 +97,10 @@ class AuthController extends ResponsesController
      */
     public function invalidateAuth()
     {
-        if (auth()->check())
+        if (auth()->check()) {
+            UserBoard::where('user_id', auth()->user()->id)->update(['is_online' => 0]);
             auth()->logout(true);
+        }
 
         return $this->sendResponse([], 'Successfully logged out.', 200);
     }
